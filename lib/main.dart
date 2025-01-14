@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_project/ui/admin_screen.dart';
+import 'package:my_project/Authorized/admin_screen.dart';
+
+import 'package:my_project/ui/landingpage.dart';
 
 
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/ui/chatbot_screen.dart';
-import 'loginscreen.dart'; // Pastikan Anda mengimpor LoginScreen
+import '../login/loginscreen.dart'; // Pastikan Anda mengimpor LoginScreen
 
 class LandingPage extends StatelessWidget {
   @override
@@ -21,7 +21,7 @@ class LandingPage extends StatelessWidget {
                   Row(
                     children: [
                       // Spacer untuk mendorong 'Home' ke kanan
-                      Spacer(flex: 1),
+                      const Spacer(flex: 1),
                       TextButton(
                         onPressed: () {},
                         child: const Text(
@@ -38,7 +38,7 @@ class LandingPage extends StatelessWidget {
                         ),
                       ),
                       // Spacer untuk memberikan jarak tambahan
-                      Spacer(flex: 5),
+                      const Spacer(flex: 5),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(

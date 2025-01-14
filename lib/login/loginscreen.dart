@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_project/ui/admin_screen.dart';
+import 'package:my_project/Authorized/admin_screen.dart';
 import 'package:my_project/services/auth_service.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:my_project/ui/forgotpassword_screen.dart';
+import 'package:my_project/login/forgotpassword_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
