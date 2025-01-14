@@ -114,4 +114,25 @@ class ApiService {
       throw Exception('Terjadi kesalahan: $e');
     }
   }
+
+  Future<bool> sendResetPasswordEmail(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/forgot"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Email berhasil dikirim
+      } else {
+        print("Error: ${response.body}");
+        return false; // Gagal mengirim email
+      }
+    } catch (e) {
+      print("Exception: $e");
+      return false;
+    }
+  }
+
 }
