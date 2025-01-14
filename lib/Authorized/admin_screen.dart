@@ -12,6 +12,8 @@ class _AdminScreenState extends State<AdminScreen> {
   final ApiService _apiService = ApiService();
   late Future<List<dynamic>> _questions;
   int hoveredIndex = -1; // Variabel untuk melacak indeks yang di-hover
+  List<dynamic> filteredQuestions = [];
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -166,7 +168,20 @@ class _AdminScreenState extends State<AdminScreen> {
                                   isDense: true,
                                 ),
                                 onChanged: (value) {
-                                  // Panggil searchData saat input berubah
+                                  setState(() {
+                                    searchQuery = value
+                                        .toLowerCase(); // Simpan input pencarian
+                                    _questions.then((questions) {
+                                      filteredQuestions =
+                                          questions.where((question) {
+                                        final questionText =
+                                            question['question_text']
+                                                .toLowerCase();
+                                        return questionText
+                                            .contains(searchQuery);
+                                      }).toList();
+                                    });
+                                  });
                                 },
                               ),
                             ),
@@ -202,12 +217,30 @@ class _AdminScreenState extends State<AdminScreen> {
                                     );
                                   }
 
-                                  final questions = snapshot.data!;
+                                  final displayedQuestions = searchQuery.isEmpty
+                                      ? snapshot.data!
+                                      : filteredQuestions;
+
+                                  if (searchQuery.isNotEmpty &&
+                                      displayedQuestions.isEmpty) {
+                                    return const Center(
+                                      child: Text(
+                                        'Data tidak ditemukan',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  }
+
                                   return ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: questions.length,
+                                    itemCount: displayedQuestions.length,
                                     itemBuilder: (context, index) {
-                                      final question = questions[index];
+                                      final question =
+                                          displayedQuestions[index];
                                       final answers = question['answers'] ?? [];
 
                                       return MouseRegion(
