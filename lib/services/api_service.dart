@@ -75,21 +75,19 @@ class ApiService {
 
   Future<void> updateQuestion(int id, Map<String, dynamic> data) async {
     try {
+      print('Mengirim data: $data');
       final response = await http.put(
         Uri.parse('$baseUrl/edit/$id'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(data),
       );
-
+      print('Respons dari API: ${response.body}');
       if (response.statusCode == 200) {
-        // Jika berhasil, lakukan sesuatu (misalnya, parse response jika ada data)
-        print('Question successfully updated');
+        print('Pertanyaan berhasil diperbarui');
       } else {
-        // Jika statusCode bukan 200, lemparkan error dengan pesan yang sesuai
         throw Exception('Failed to update question: ${response.body}');
       }
     } catch (e) {
-      // Tangani exception jika terjadi masalah dalam permintaan HTTP
       print('Error: $e');
       throw Exception('Something went wrong while updating the question');
     }

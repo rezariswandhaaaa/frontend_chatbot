@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/Authorized/addform.dart';
 import 'package:my_project/services/api_service.dart';
+import 'package:my_project/ui/landingpage.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -64,7 +65,15 @@ class _AdminScreenState extends State<AdminScreen> {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold)),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LandingPage()),
+                            (Route<dynamic> route) =>
+                                false, // Menghapus semua rute sebelumnya
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -147,7 +156,7 @@ class _AdminScreenState extends State<AdminScreen> {
                               width: 200,
                               child: TextField(
                                 decoration: const InputDecoration(
-                                  hintText: 'Cari Data',
+                                  hintText: 'Cari Pertanyaan...',
                                   prefixIcon: Icon(Icons.search),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.zero,
@@ -156,7 +165,9 @@ class _AdminScreenState extends State<AdminScreen> {
                                       EdgeInsets.symmetric(vertical: 12),
                                   isDense: true,
                                 ),
-                                onChanged: (value) {},
+                                onChanged: (value) {
+                                  // Panggil searchData saat input berubah
+                                },
                               ),
                             ),
                           ],
@@ -270,6 +281,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                                                             [0][
                                                                         'answer_text']
                                                                     : '');
+
                                                         showDialog(
                                                           context: context,
                                                           builder: (context) =>
@@ -356,13 +368,6 @@ class _AdminScreenState extends State<AdminScreen> {
                                                                   Navigator.pop(
                                                                       context);
                                                                 },
-                                                                child:
-                                                                    const Text(
-                                                                  "Batal",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
                                                                 style: ElevatedButton
                                                                     .styleFrom(
                                                                   backgroundColor:
@@ -375,40 +380,44 @@ class _AdminScreenState extends State<AdminScreen> {
                                                                             .circular(8),
                                                                   ),
                                                                 ),
+                                                                child: const Text(
+                                                                    "Batal",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white)),
                                                               ),
                                                               ElevatedButton(
                                                                 onPressed:
                                                                     () async {
-                                                                  await _apiService
-                                                                      .updateQuestion(
-                                                                    question[
-                                                                        'id'],
-                                                                    {
-                                                                      'question_text':
-                                                                          questionController
-                                                                              .text,
-                                                                      'answers':
-                                                                          [
-                                                                        {
-                                                                          'answer_text':
-                                                                              answerController.text
-                                                                        }
-                                                                      ],
-                                                                    },
-                                                                  );
-                                                                  setState(() {
-                                                                    _questions =  _apiService.getQuestionsWithAnswers();
-                                                                  });
-                                                                  Navigator.pop(
-                                                                      context);
+                                                                  print(
+                                                                      'Tombol Simpan ditekan');
+                                                                  try {
+                                                                    await _apiService
+                                                                        .updateQuestion(
+                                                                      question[
+                                                                          'id'],
+                                                                      {
+                                                                        'question_text':
+                                                                            questionController.text,
+                                                                        'answer_text':
+                                                                            answerController.text
+                                                                      },
+                                                                    );
+                                                                    print(
+                                                                        'Update berhasil');
+                                                                    setState(
+                                                                        () {
+                                                                      _questions =
+                                                                          _apiService
+                                                                              .getQuestionsWithAnswers();
+                                                                    });
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  } catch (e) {
+                                                                    print(
+                                                                        'Terjadi kesalahan: $e');
+                                                                  }
                                                                 },
-                                                                child:
-                                                                    const Text(
-                                                                  "Simpan",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
                                                                 style: ElevatedButton
                                                                     .styleFrom(
                                                                   backgroundColor:
@@ -421,6 +430,11 @@ class _AdminScreenState extends State<AdminScreen> {
                                                                             .circular(8),
                                                                   ),
                                                                 ),
+                                                                child: const Text(
+                                                                    "Simpan",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white)),
                                                               ),
                                                             ],
                                                           ),
