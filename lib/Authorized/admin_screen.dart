@@ -105,12 +105,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       ),
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.white,
-                            backgroundImage: AssetImage(
-                                'assets/images/user.png'), // Path ke gambar profil
-                            radius: 16,
-                          ),
+                          
                           SizedBox(width: 8),
                           Text(
                             'Hai, Admin!',
