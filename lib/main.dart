@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_project/Authorized/admin_screen.dart';
 import 'package:my_project/ui/landingpage.dart';
 
 
@@ -14,7 +15,7 @@ class ChatAIApp extends StatelessWidget {
       title: 'Chat AI',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: LandingPage(),
+      home: AdminScreen(),
     );
   }
 }

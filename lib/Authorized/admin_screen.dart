@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/Authorized/addform.dart';
 import 'package:my_project/services/api_service.dart';
+import 'dart:io';
 import 'package:my_project/ui/landingpage.dart';
+import 'package:file_picker/file_picker.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -19,6 +21,47 @@ class _AdminScreenState extends State<AdminScreen> {
   void initState() {
     super.initState();
     _questions = _apiService.getQuestionsWithAnswers();
+  }
+
+  Future<void> _pickAndUploadFile() async {
+    try {
+      // Buka dialog untuk memilih file
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx'],
+        withData: true, // Tambahkan ini untuk mendapatkan 'bytes'
+      );
+
+      if (result != null) {
+        // Ambil bytes dari file yang dipilih
+        final bytes = result.files.single.bytes;
+
+        // Periksa apakah bytes tidak null
+        if (bytes != null) {
+          // Ambil ekstensi file
+          String? fileExtension = result.files.single.extension;
+
+          // Validasi ekstensi file
+          if (fileExtension != null && (fileExtension == 'xlsx')) {
+            // Upload file ke server
+            await _apiService.uploadExcel(bytes);
+            print('File uploaded successfully!');
+          } else {
+            print('Invalid file extension.');
+          }
+        } else {
+          print('File bytes are null.');
+        }
+      } else {
+        print('No file selected.');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    setState(() {
+      _questions = _apiService.getQuestionsWithAnswers();
+    });
   }
 
   @override
@@ -105,7 +148,6 @@ class _AdminScreenState extends State<AdminScreen> {
                       ),
                       Row(
                         children: [
-                          
                           SizedBox(width: 8),
                           Text(
                             'Hai, Admin!',
@@ -149,6 +191,20 @@ class _AdminScreenState extends State<AdminScreen> {
                               ),
                             ),
                             const SizedBox(width: 16),
+                            ElevatedButton.icon(
+                              onPressed: _pickAndUploadFile,
+                              icon: const Icon(Icons.upload, color: Colors.white),
+                              label: const Text("Unggah Excel",
+                                  style: TextStyle(color: Colors.white, )),
+                              style: ElevatedButton.styleFrom(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 74, 116, 74),
+                              ),
+                            ),
+                            const SizedBox(width: 700),
                             SizedBox(
                               width: 200,
                               child: TextField(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -132,6 +133,42 @@ class ApiService {
     } catch (e) {
       print("Exception: $e");
       return false;
+    }
+  }
+
+
+  Future<void> uploadExcel(Uint8List bytes) async {
+    try {
+      // Buat request URL
+      final Uri url = Uri.parse('$baseUrl/imports');
+
+      // Siapkan request multipart
+      var request = http.MultipartRequest('POST', url)
+        ..headers.addAll({
+          'Accept': 'application/json', // Memastikan respons API berupa JSON
+          'Content-Type': 'multipart/form-data'
+        })
+        ..files.add(http.MultipartFile.fromBytes(
+          'file', // Nama field yang sesuai di server
+          bytes,
+          filename: 'uploaded_file.xlsx', // Nama file yang diunggah
+        ));
+
+      // Kirimkan request
+      var streamedResponse = await request.send();
+
+      // Parsing respons dari server
+      var response = await http.Response.fromStream(streamedResponse);
+
+      // Cek status code
+      if (response.statusCode == 200) {
+        print('Upload berhasil: ${response.body}');
+      } else {
+        print('Upload gagal: ${response.statusCode}');
+        print('Error: ${response.body}');
+      }
+    } catch (e) {
+      print('Terjadi kesalahan: $e');
     }
   }
 
