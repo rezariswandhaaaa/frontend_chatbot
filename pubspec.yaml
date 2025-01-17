@@ -68,6 +68,9 @@ flutter:
     - assets/images/perpus.png
     - assets/images/user.png
     - assets/images/chatty.png
+    - assets/images/table.png
+    - assets/images/import.png
+    - assets/images/workbook.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

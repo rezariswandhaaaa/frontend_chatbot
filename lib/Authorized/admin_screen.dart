@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/Authorized/addform.dart';
+import 'package:my_project/Authorized/panduan.dart';
 import 'package:my_project/services/api_service.dart';
 import 'package:my_project/ui/landingpage.dart';
 import 'package:file_picker/file_picker.dart';
@@ -17,6 +18,7 @@ class _AdminScreenState extends State<AdminScreen> {
   String searchQuery = '';
   bool isHoveringDataInformasi = false;
   bool isHoveringLogout = false;
+  bool isHoveringPanduan = false;
 
   @override
   void initState() {
@@ -103,18 +105,50 @@ class _AdminScreenState extends State<AdminScreen> {
                           leading: Icon(Icons.info,
                               color: isHoveringDataInformasi
                                   ? Colors.red
-                                  : Colors.black),
+                                  : Colors.red[400]),
                           title: Text(
                             'Data Informasi',
                             style: TextStyle(
                               color: isHoveringDataInformasi
                                   ? Color.fromARGB(
                                       255, 255, 0, 0) // Warna merah saat hover
-                                  : Colors.black,
+                                  : Colors.red[300],
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      MouseRegion(
+                        onEnter: (event) =>
+                            setState(() => isHoveringPanduan = true),
+                        onExit: (event) =>
+                            setState(() => isHoveringPanduan = false),
+                        child: ListTile(
+                          leading: Icon(Icons.menu_book_outlined,
+                              color: isHoveringPanduan
+                                  ? Colors.red
+                                  : Colors.black),
+                          title: Text(
+                            'Panduan Form Excel',
+                            style: TextStyle(
+                              color: isHoveringPanduan
+                                  ? Color.fromARGB(
+                                      255, 255, 0, 0) // Warna merah saat hover
+                                  : Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PanduanScreen()),
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -222,7 +256,7 @@ class _AdminScreenState extends State<AdminScreen> {
                               onPressed: _pickAndUploadFile,
                               icon: const Icon(Icons.upload_file,
                                   color: Colors.white),
-                              label: const Text("Unggah Excel",
+                              label: const Text("Import Excel",
                                   style: TextStyle(
                                     color: Colors.white,
                                   )),
