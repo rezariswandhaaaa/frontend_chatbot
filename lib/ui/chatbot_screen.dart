@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/services/api_service.dart';
 import 'package:my_project/ui/landingpage.dart'; // Import ApiService
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatBotScreen extends StatefulWidget {
   const ChatBotScreen({Key? key}) : super(key: key);
@@ -62,16 +63,17 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     } catch (e) {
       setState(() {
         _isLoading = false;
-        // Tampilkan pesan jika terjadi kesalahan pada koneksi API
         _messages.add({
           'sender': 'bot',
           'text':
-              'Jawaban tidak ditemukan. Silakan hubungi admin melalui WhatsApp.'
+              'Jawaban tidak ditemukan. Silakan hubungi admin melalui WhatsApp.',
         });
+
+        // Tambahkan tautan WhatsApp
         _messages.add({
           'sender': 'bot',
           'text':
-              'Klik di sini(https://wa.me/6281234567890) untuk menghubungi admin.'
+              'Klik di sini untuk menghubungi admin: https://wa.me/6287717659395',
         });
       });
     }
@@ -86,6 +88,15 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
+  }
+
+  Future<void> _openWhatsApp(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Tidak dapat membuka tautan $url';
+    }
   }
 
   @override
@@ -221,12 +232,12 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 144, 36, 36),
+            color: Colors.grey[300],
             borderRadius: BorderRadius.circular(8),
           ),
           child: const Text(
             'Selamat datang, ada yang bisa dibantu?',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
           ),
         ),
       ),
@@ -251,7 +262,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           Flexible(
             child: Container(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 144, 36, 36),
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: IntrinsicWidth(
@@ -284,7 +295,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                                 category,
                                 style: TextStyle(
                                   color:
-                                      isSelected ? Colors.white : Colors.white,
+                                      isSelected ? Colors.black : Colors.black,
                                 ),
                               ),
                             ),
@@ -292,26 +303,56 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                         );
                       }).toList(),
                     ),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: _questionsByCategory[_selectedCategory]!
-                            .map((question) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      _controller.text = question;
-                                      _sendMessage();
-                                    },
+                            .map((question) {
+                          bool isHovered = false;
+                          return StatefulBuilder(
+                            builder: (context, setHoverState) {
+                              return MouseRegion(
+                                onEnter: (_) {
+                                  setHoverState(() => isHovered = true);
+                                },
+                                onExit: (_) {
+                                  setHoverState(() => isHovered = false);
+                                },
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _controller.text = question;
+                                    _sendMessage();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 8),
                                     child: Text(
                                       question,
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                        color: isHovered
+                                            ? Colors.blue
+                                            : Colors.black,
+                                        decoration: isHovered
+                                            ? TextDecoration.underline
+                                            : TextDecoration.none,
+                                        fontWeight: isHovered
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
                                     ),
                                   ),
-                                ))
-                            .toList(),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
                       ),
                     ),
                   ],
@@ -325,6 +366,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   }
 
   Widget _buildChatBubble(String text, bool isUser) {
+    bool isWhatsAppLink = text.contains('https://wa.me/');
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Row(
@@ -345,9 +388,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             child: Container(
               padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
-                color: isUser
-                    ? const Color.fromARGB(255, 144, 36, 36)
-                    : const Color.fromARGB(255, 144, 36, 36),
+                color: isUser ? Colors.grey[300] : Colors.grey[300],
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(12),
                   topRight: const Radius.circular(12),
@@ -355,14 +396,25 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                   bottomRight: isUser ? Radius.zero : const Radius.circular(12),
                 ),
               ),
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: isUser ? Colors.white : Colors.white,
-                  fontSize: 16.0,
-                  height: 1.5,
-                ),
-              ),
+              child: isWhatsAppLink
+                  ? InkWell(
+                      onTap: () => _openWhatsApp(text.split(': ')[1].trim()),
+                      child: Text(
+                        'Klik di sini untuk menghubungi admin.',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                    )
+                  : Text(
+                      text,
+                      style: TextStyle(
+                        color: isUser ? Colors.black : Colors.black,
+                        fontSize: 16.0,
+                        height: 1.5,
+                      ),
+                    ),
             ),
           ),
           if (isUser) const SizedBox(width: 8),

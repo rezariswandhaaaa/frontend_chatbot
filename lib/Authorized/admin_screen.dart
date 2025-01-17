@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/Authorized/addform.dart';
 import 'package:my_project/services/api_service.dart';
-import 'dart:io';
 import 'package:my_project/ui/landingpage.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -16,6 +15,8 @@ class _AdminScreenState extends State<AdminScreen> {
   int hoveredIndex = -1; // Variabel untuk melacak indeks yang di-hover
   List<dynamic> filteredQuestions = [];
   String searchQuery = '';
+  bool isHoveringDataInformasi = false;
+  bool isHoveringLogout = false;
 
   @override
   void initState() {
@@ -93,32 +94,58 @@ class _AdminScreenState extends State<AdminScreen> {
                 Expanded(
                   child: ListView(
                     children: [
-                      ListTile(
-                        leading: const Icon(Icons.info, color: Colors.black),
-                        title: const Text(
-                          'Data Informasi',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 164, 4, 4),
-                              fontWeight: FontWeight.bold),
+                      MouseRegion(
+                        onEnter: (event) =>
+                            setState(() => isHoveringDataInformasi = true),
+                        onExit: (event) =>
+                            setState(() => isHoveringDataInformasi = false),
+                        child: ListTile(
+                          leading: Icon(Icons.info,
+                              color: isHoveringDataInformasi
+                                  ? Colors.red
+                                  : Colors.black),
+                          title: Text(
+                            'Data Informasi',
+                            style: TextStyle(
+                              color: isHoveringDataInformasi
+                                  ? Color.fromARGB(
+                                      255, 255, 0, 0) // Warna merah saat hover
+                                  : Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {},
                         ),
-                        onTap: () {},
                       ),
                       const SizedBox(height: 10),
-                      ListTile(
-                        leading: const Icon(Icons.logout, color: Colors.black),
-                        title: const Text('Logout',
+                      // ListTile untuk Logout
+                      MouseRegion(
+                        onEnter: (event) =>
+                            setState(() => isHoveringLogout = true),
+                        onExit: (event) =>
+                            setState(() => isHoveringLogout = false),
+                        child: ListTile(
+                          leading: Icon(Icons.logout,
+                              color:
+                                  isHoveringLogout ? Colors.red : Colors.black),
+                          title: Text(
+                            'Logout',
                             style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold)),
-                        onTap: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LandingPage()),
-                            (Route<dynamic> route) =>
-                                false, // Menghapus semua rute sebelumnya
-                          );
-                        },
+                              color:
+                                  isHoveringLogout ? Colors.red : Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LandingPage()),
+                              (Route<dynamic> route) =>
+                                  false, // Menghapus semua rute sebelumnya
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -177,7 +204,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                     MaterialPageRoute(
                                         builder: (context) => AddFormScreen()));
                               },
-                              icon: const Icon(Icons.add, color: Colors.white),
+                              icon: const Icon(Icons.add_box_outlined, color: Colors.white),
                               label: const Text(
                                 "Tambah Data",
                                 style: TextStyle(color: Colors.white),
@@ -193,9 +220,12 @@ class _AdminScreenState extends State<AdminScreen> {
                             const SizedBox(width: 16),
                             ElevatedButton.icon(
                               onPressed: _pickAndUploadFile,
-                              icon: const Icon(Icons.upload, color: Colors.white),
+                              icon: const Icon(Icons.upload_file,
+                                  color: Colors.white),
                               label: const Text("Unggah Excel",
-                                  style: TextStyle(color: Colors.white, )),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  )),
                               style: ElevatedButton.styleFrom(
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.zero,
@@ -244,7 +274,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       Expanded(
                         child: Center(
                           child: Card(
-                            color: const Color.fromARGB(255, 191, 204, 193),
+                            color: Colors.grey[300],
                             elevation: 4,
                             margin:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
@@ -307,7 +337,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                         },
                                         child: Card(
                                           color: hoveredIndex == index
-                                              ? Colors.grey[300]
+                                              ? Colors.grey[100]
                                               : Colors.white,
                                           margin: const EdgeInsets.symmetric(
                                               vertical: 8.0),
