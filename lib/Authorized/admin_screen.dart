@@ -204,7 +204,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                     MaterialPageRoute(
                                         builder: (context) => AddFormScreen()));
                               },
-                              icon: const Icon(Icons.add_box_outlined, color: Colors.white),
+                              icon: const Icon(Icons.add, color: Colors.white),
                               label: const Text(
                                 "Tambah Data",
                                 style: TextStyle(color: Colors.white),
