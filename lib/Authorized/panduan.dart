@@ -136,7 +136,7 @@ class _PanduanScreenState extends State<PanduanScreen> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 12.0),
                   child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         'Panduan Form Excel',
@@ -145,18 +145,6 @@ class _PanduanScreenState extends State<PanduanScreen> {
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(width: 8),
-                          Text(
-                            'Hai, Admin!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),

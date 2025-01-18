@@ -197,7 +197,7 @@ class _AdminScreenState extends State<AdminScreen> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 12.0),
                   child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         'Data Informasi',
@@ -206,18 +206,6 @@ class _AdminScreenState extends State<AdminScreen> {
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(width: 8),
-                          Text(
-                            'Hai, Admin!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
