@@ -193,12 +193,17 @@ class _LandingPageState extends State<LandingPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Image.asset(
-                          'assets/images/perpus.png',
-                          height: 120,
-                        ),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 70,
+                            backgroundColor: Color.fromARGB(255, 74, 116, 74),
+                            backgroundImage:
+                                AssetImage('assets/images/perpus.png'),
+                          ),
+                          SizedBox(height: 10),
+                        ],
                       ),
                       Expanded(
                         child: Column(
